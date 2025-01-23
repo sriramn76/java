@@ -1,0 +1,35 @@
+#include <stdio.h>
+#include <ctype.h>
+int main() {
+    FILE *file = fopen("file.txt", "r");
+    if (file == NULL) {
+        printf("Failed to open the file");
+        return 1;
+    }
+    char buffer[100];
+    int digit_count = 0;
+    char digits[11] = {0};
+    int char_count = 0;
+    char non_digits[11] = {0};    
+    while (fgets(buffer, sizeof(buffer), file) != NULL) {
+        for (int i = 0; buffer[i] != '\0'; i++) {
+            if (isdigit(buffer[i]) && digit_count < 10) {
+                digits[digit_count] = buffer[i];
+                digit_count++;
+            } else if (!isdigit(buffer[i]) && char_count < 10) {
+                non_digits[char_count] = buffer[i];
+                char_count++;
+            }
+            if (digit_count == 10) {
+                printf("First 10 digits: %s\n", digits);
+                fclose(file);
+                return 0;
+            }
+        }
+    }
+    if (digit_count < 10) {
+        printf("First 10 non-digits: %s\n", non_digits);
+    }
+    fclose(file);
+    return 0;
+}
